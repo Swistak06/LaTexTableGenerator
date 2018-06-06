@@ -1,0 +1,2 @@
+# LaTexTableGenerator
+Latex table generator
