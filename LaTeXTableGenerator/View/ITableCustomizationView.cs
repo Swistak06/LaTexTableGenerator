@@ -15,9 +15,13 @@ namespace LaTeXTableGenerator.View
         void PlaceFormInCenter();
         void ControllsAdd(TableCellButton tableCellButton);
         void ControllsRemove(TableCellButton tableCellButton);
+        void WrongMergeErrorMessage();
+        void SingleMergeErrorMessage();
+        void MultipleSplitErrorMessage();
 
         event Action CancelButtonClickEvent;
         event Action MergeButtonClickEvent;
+        event Action SplitButtonClickEvent;
 
     }
 }

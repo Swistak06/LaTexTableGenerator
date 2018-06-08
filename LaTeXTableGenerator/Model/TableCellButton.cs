@@ -47,7 +47,8 @@ namespace LaTeXTableGenerator.Model
 
         public void InsertMergedCells(List<int> mergedCells)
         {
-            MergedCellsIndexes = mergedCells;
+            foreach (int i in mergedCells)
+                MergedCellsIndexes.Add(i);
         }
 
         public void RemoveMergedCells()
@@ -70,6 +71,7 @@ namespace LaTeXTableGenerator.Model
         {
             FlatStyle = FlatStyle.Flat;
             FlatAppearance.BorderColor = Color.Red;
+            FlatAppearance.BorderSize = 2;
         }
 
         protected override void OnClick(EventArgs e)

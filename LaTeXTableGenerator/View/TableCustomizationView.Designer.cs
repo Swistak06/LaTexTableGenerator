@@ -31,6 +31,7 @@
             this.cancelButton = new System.Windows.Forms.Button();
             this.generateButton = new System.Windows.Forms.Button();
             this.mergeButton = new System.Windows.Forms.Button();
+            this.splitCellsButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // cancelButton
@@ -66,11 +67,24 @@
             this.mergeButton.UseVisualStyleBackColor = true;
             this.mergeButton.Click += new System.EventHandler(this.mergeButton_Click);
             // 
+            // splitCellsButton
+            // 
+            this.splitCellsButton.Cursor = System.Windows.Forms.Cursors.Default;
+            this.splitCellsButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.splitCellsButton.Location = new System.Drawing.Point(263, 30);
+            this.splitCellsButton.Name = "splitCellsButton";
+            this.splitCellsButton.Size = new System.Drawing.Size(100, 35);
+            this.splitCellsButton.TabIndex = 3;
+            this.splitCellsButton.Text = "Split Cells";
+            this.splitCellsButton.UseVisualStyleBackColor = true;
+            this.splitCellsButton.Click += new System.EventHandler(this.splitCellsButton_Click);
+            // 
             // TableCustomizationView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(984, 661);
+            this.Controls.Add(this.splitCellsButton);
             this.Controls.Add(this.mergeButton);
             this.Controls.Add(this.generateButton);
             this.Controls.Add(this.cancelButton);
@@ -86,5 +100,6 @@
         private System.Windows.Forms.Button cancelButton;
         private System.Windows.Forms.Button generateButton;
         private System.Windows.Forms.Button mergeButton;
+        private System.Windows.Forms.Button splitCellsButton;
     }
 }

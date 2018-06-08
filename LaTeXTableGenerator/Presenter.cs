@@ -28,19 +28,26 @@ namespace LaTeXTableGenerator
             tableCustomizationView.CancelButtonClickEvent += ShowMainView;
             tableCustomizationView.CancelButtonClickEvent += TableDestruction;
             tableCustomizationView.MergeButtonClickEvent += MergeCells;
+            tableCustomizationView.SplitButtonClickEvent += SplitCells;
+
         }
 
 
         //Methods
+        //===============================================================================================
 
-        //Method resposibl for generating appropriate table of buttons
+        //Method resposible for generating appropriate table of buttons
         public void CreateTableCellButtons(int verticalStartPosiotion,int horizontalStartPosiotion,
             int numberOfRows, int numberOfColumns)
         {
             int localVerticalPositon = verticalStartPosiotion;
             int localHorizontalPosition;
             int labelCounter = 1;
-            for(int i = 0; i < numberOfRows; i++)
+
+            table.NumberOfColumns = numberOfColumns;
+            table.NumberOfRows = numberOfRows;
+
+            for (int i = 0; i < numberOfRows; i++)
             {
                 localHorizontalPosition = horizontalStartPosiotion;
                 for(int j=0; j < numberOfColumns; j++)
@@ -88,16 +95,21 @@ namespace LaTeXTableGenerator
         public void MergeCells()
         {
             sortList(tableCustomizationView.SelectedCells);
-            MergedCellsValidation(tableCustomizationView.SelectedCells);
-            Random rnd = new Random();
-            Color groupColor = TableCellButton.GetRandomColor(rnd);
-            foreach (int i in tableCustomizationView.SelectedCells)
+            if(MergedCellsValidation(tableCustomizationView.SelectedCells))
             {
-                table.TableCellButtonList.ElementAt(i - 1).setBodyColor(groupColor);
-                table.TableCellButtonList.ElementAt(i - 1).deselectCell();
-                table.TableCellButtonList.ElementAt(i - 1).InsertMergedCells(tableCustomizationView.SelectedCells);
+                Random rnd = new Random();
+                Color groupColor = TableCellButton.GetRandomColor(rnd);
+                foreach (int i in tableCustomizationView.SelectedCells)
+                {   
+                    table.TableCellButtonList[i - 1].setBodyColor(groupColor);
+                    table.TableCellButtonList[i - 1].deselectCell();
+                    table.TableCellButtonList[i - 1].InsertMergedCells(tableCustomizationView.SelectedCells);
+                    TableCellButton.ChangeState(table.TableCellButtonList[i - 1]);                    
+                }
+
+                tableCustomizationView.SelectedCells.Clear();
             }
-            tableCustomizationView.SelectedCells.Clear();
+         
         }
 
         //Method resposible for inserting selected buttons indexes into list
@@ -108,11 +120,9 @@ namespace LaTeXTableGenerator
                 tableCustomizationView.SelectedCells.Add(selectedCellButton.Index);
             else
                 tableCustomizationView.SelectedCells.Remove(selectedCellButton.Index);
-            if (tableCustomizationView.SelectedCells.Count > 0)
-                foreach (int i in tableCustomizationView.SelectedCells)
-                    Console.WriteLine(i.ToString());
         }
 
+        //List Bubble sort
         public void sortList(List<int> listToSort)
         {
             int length = listToSort.Count;
@@ -121,29 +131,41 @@ namespace LaTeXTableGenerator
             for (int i = 0; i < length; i++)
             {
                 for (int j = i + 1; j < length; j++)
-                {
                     if (listToSort[i] > listToSort[j])
                     {
                         temp = listToSort[i];
                         listToSort[i] = listToSort[j];
                         listToSort[j] = temp;
                     }
-                }
             }
         }
 
-
-
         public bool MergedCellsValidation(List<int> cellsToMerge)
         {
-            int minX = table.TableCellButtonList[cellsToMerge[0]].RowNumber;
-            int minY = table.TableCellButtonList[cellsToMerge[0]].ColumnNumber;
+            //Single cell selected 
+            if (cellsToMerge.Count == 1)
+            {
+                tableCustomizationView.SingleMergeErrorMessage();
+                return false;
+            }
+
+            foreach(int i in cellsToMerge)
+                if(table.TableCellButtonList[i - 1].MergedCellsIndexes.Count != 0)
+                {
+                    tableCustomizationView.WrongMergeErrorMessage();
+                    return false;
+                }
+                   
+
+                
+            int minX = table.TableCellButtonList[cellsToMerge[0]-1].RowNumber;
+            int minY = table.TableCellButtonList[cellsToMerge[0]-1].ColumnNumber;
             int maxX = minX;
             int maxY = minY;
-
+            int startCell;
+            List<int> correctMerge = new List<int>();
             int diffX,diffY;
-
-
+            
             foreach (int i in cellsToMerge)
             {
                 if (table.TableCellButtonList[i - 1].RowNumber > maxX)
@@ -155,18 +177,40 @@ namespace LaTeXTableGenerator
                 else if (table.TableCellButtonList[i - 1].ColumnNumber < minY)
                     minY = table.TableCellButtonList[i - 1].ColumnNumber;
             }
+
             diffX = maxX - minX;
             diffY = maxY - minY;
+            startCell = (minX - 1) * table.NumberOfColumns + minY;
 
-            Console.WriteLine("MinX:"+minX);
-            Console.WriteLine("MaxX:" + maxX);
-            Console.WriteLine("MinY:" + minY);
-            Console.WriteLine("MaxY:" + maxY);
-            Console.WriteLine("diffX:" + diffX);
-            Console.WriteLine("diffY:" + diffY);
+            for(int j = 0;j <= diffX;j++)
+                for (int i = 0; i <= diffY; i++)
+                    correctMerge.Add((startCell + i) + (j*table.NumberOfColumns));
+
+            //checking if both lists have the same size
+            if (cellsToMerge.Count != correctMerge.Count)
+            {
+                tableCustomizationView.WrongMergeErrorMessage();
+                return false;
+            }
+               
+            for(int i =0; i<correctMerge.Count; i++)
+                if (correctMerge[i] != cellsToMerge[i])
+                    return false;       
+            return true;
+        }
+
+        public void SplitCells()
+        {
+            if (tableCustomizationView.SelectedCells.Count != 1)
+                tableCustomizationView.MultipleSplitErrorMessage();
+
+            List<int> cellsToSplit = new List<int>(table.TableCellButtonList[tableCustomizationView.SelectedCells[0]-1].MergedCellsIndexes);
 
 
-            return false;
+            foreach (int i in cellsToSplit)
+                Console.WriteLine(i);
+            
+
         }
     }
 }

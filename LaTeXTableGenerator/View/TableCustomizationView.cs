@@ -64,6 +64,7 @@ namespace LaTeXTableGenerator.View
 
         public event Action CancelButtonClickEvent;
         public event Action MergeButtonClickEvent;
+        public event Action SplitButtonClickEvent;
 
         public void ControllsAdd(TableCellButton tableCellButton)
         {
@@ -100,5 +101,30 @@ namespace LaTeXTableGenerator.View
                 MergeButtonClickEvent();
             }
         }
+
+        public void WrongMergeErrorMessage()
+        {
+            MessageBox.Show("Unable to merge cells!", "Warning!");
+        }
+
+        public void SingleMergeErrorMessage()
+        {
+            MessageBox.Show("Cannot merge single cell!", "Warning!");
+        }
+
+        public void MultipleSplitErrorMessage()
+        {
+            MessageBox.Show("Select single cell of group to split!", "Warning!");
+        }
+
+        private void splitCellsButton_Click(object sender, EventArgs e)
+        {
+            if (SplitButtonClickEvent != null)
+            {
+                SplitButtonClickEvent();
+            }
+        }
+
+
     }
 }
