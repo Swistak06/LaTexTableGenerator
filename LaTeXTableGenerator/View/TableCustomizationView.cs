@@ -16,7 +16,12 @@ namespace LaTeXTableGenerator.View
         public TableCustomizationView()
         {
             InitializeComponent();
+            currentlyChosenButtons = new List<int>();
+            selectedCells = new List<int>();
         }
+
+        private List<int> currentlyChosenButtons;
+        private List<int> selectedCells;
 
         public bool SetVisible
         {
@@ -35,12 +40,25 @@ namespace LaTeXTableGenerator.View
         {
             get
             {
-                return CurrentlyChosenButtons;
+                return currentlyChosenButtons;
             }
 
             set
             {
-                CurrentlyChosenButtons = value; 
+                currentlyChosenButtons = value; 
+            }
+        }
+
+        public List<int> SelectedCells
+        {
+            get
+            {
+                return selectedCells;
+            }
+
+            set
+            {
+                selectedCells = value;
             }
         }
 

@@ -15,14 +15,11 @@ namespace LaTeXTableGenerator.Model
             tcb.IsChosen = !tcb.IsChosen;
             if (tcb.IsChosen)
             {
-                tcb.FlatStyle = FlatStyle.Flat;
-                tcb.FlatAppearance.BorderColor = System.Drawing.Color.Red;
-                tcb.FlatAppearance.BorderSize = 1;
+                tcb.selectCell();
             }
             else
             {
-                tcb.FlatStyle = FlatStyle.Standard;
-                tcb.FlatAppearance.BorderColor = System.Drawing.Color.Empty;
+                tcb.deselectCell();
             }
         }
 
@@ -47,7 +44,33 @@ namespace LaTeXTableGenerator.Model
             IsChosen = false;
             MergedCellsIndexes = new List<int>();
         }
+
+        public void InsertMergedCells(List<int> mergedCells)
+        {
+            MergedCellsIndexes = mergedCells;
+        }
+
+        public void RemoveMergedCells()
+        {
+            MergedCellsIndexes.Clear();
+        }
                 
+        public void setBodyColor(Color color)
+        {
+            BackColor = color;
+        }
+
+        public void deselectCell( )
+        {
+            FlatStyle = FlatStyle.Standard;
+            FlatAppearance.BorderColor = System.Drawing.Color.Empty;
+        }
+
+        public void selectCell()
+        {
+            FlatStyle = FlatStyle.Flat;
+            FlatAppearance.BorderColor = Color.Red;
+        }
 
         protected override void OnClick(EventArgs e)
         {

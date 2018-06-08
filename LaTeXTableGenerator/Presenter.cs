@@ -32,6 +32,8 @@ namespace LaTeXTableGenerator
 
 
         //Methods
+
+        //Method resposibl for generating appropriate table of buttons
         public void CreateTableCellButtons(int verticalStartPosiotion,int horizontalStartPosiotion,
             int numberOfRows, int numberOfColumns)
         {
@@ -43,11 +45,12 @@ namespace LaTeXTableGenerator
                 localHorizontalPosition = horizontalStartPosiotion;
                 for(int j=0; j < numberOfColumns; j++)
                 {
-                    TableCellButton tableCellButton = new TableCellButton(labelCounter,i,j);
+                    TableCellButton tableCellButton = new TableCellButton(labelCounter,i+1,j+1);
                     tableCellButton.Left = localHorizontalPosition;
                     tableCellButton.Top = localVerticalPositon;
                     tableCellButton.Height = 35;                    
                     tableCellButton.Text = labelCounter.ToString();
+                    tableCellButton.Click += new EventHandler(SelectingCell);
                     table.TableCellButtonList.Add(tableCellButton);
                     tableCustomizationView.ControllsAdd(tableCellButton);
                     labelCounter++;
@@ -57,6 +60,7 @@ namespace LaTeXTableGenerator
             }
         }
 
+        //Method resposible for displaying table customization view with aprropriate table
         public void ShowTableCustomizationForm()
         {
             mainView.SetVisible = false;
@@ -65,10 +69,12 @@ namespace LaTeXTableGenerator
                 mainView.NumberOfColumns);
         }
 
+        //Deleting table on returning to main view
         public void TableDestruction()
         {
             foreach(TableCellButton tcb in table.TableCellButtonList)
                 tableCustomizationView.ControllsRemove(tcb);
+            tableCustomizationView.SelectedCells.Clear();
             table.TableCellButtonList.Clear();
                 
         }
@@ -81,25 +87,87 @@ namespace LaTeXTableGenerator
 
         public void MergeCells()
         {
-            //Creating list of all cells merged this time
-            List<int> mergedCells = new List<int>();
+            sortList(tableCustomizationView.SelectedCells);
+            MergedCellsValidation(tableCustomizationView.SelectedCells);
             Random rnd = new Random();
-            Color groupColor = TableCellButton.GetRandomColor(rnd); 
-            
-            
-              
-            //foreach (TableCellButton tcb in table.TableCellButtonList)
-            //    if (tcb.IsChosen && tcb.MergedCellsIndexes.Count == 0)
-            //        mergedCells.Add(tcb.Index);
-            ////Inserting list of merged cells into every cell and changing its state
-            //if(mergedCells.Count>1)
-            //    foreach (int index in mergedCells)
-            //        if (table.TableCellButtonList.ElementAt(index - 1).IsChosen)
-            //        {
-            //            table.TableCellButtonList.ElementAt(index - 1).BackColor = groupColor;
-            //            table.TableCellButtonList.ElementAt(index - 1).MergedCellsIndexes = mergedCells;
-            //            TableCellButton.ChangeState(table.TableCellButtonList.ElementAt(index - 1));
-            //        }
+            Color groupColor = TableCellButton.GetRandomColor(rnd);
+            foreach (int i in tableCustomizationView.SelectedCells)
+            {
+                table.TableCellButtonList.ElementAt(i - 1).setBodyColor(groupColor);
+                table.TableCellButtonList.ElementAt(i - 1).deselectCell();
+                table.TableCellButtonList.ElementAt(i - 1).InsertMergedCells(tableCustomizationView.SelectedCells);
+            }
+            tableCustomizationView.SelectedCells.Clear();
+        }
+
+        //Method resposible for inserting selected buttons indexes into list
+        public void SelectingCell(object sender, EventArgs e)
+        {
+            TableCellButton selectedCellButton = (TableCellButton)sender;
+            if (!selectedCellButton.IsChosen)
+                tableCustomizationView.SelectedCells.Add(selectedCellButton.Index);
+            else
+                tableCustomizationView.SelectedCells.Remove(selectedCellButton.Index);
+            if (tableCustomizationView.SelectedCells.Count > 0)
+                foreach (int i in tableCustomizationView.SelectedCells)
+                    Console.WriteLine(i.ToString());
+        }
+
+        public void sortList(List<int> listToSort)
+        {
+            int length = listToSort.Count;
+            int temp = listToSort[0];
+
+            for (int i = 0; i < length; i++)
+            {
+                for (int j = i + 1; j < length; j++)
+                {
+                    if (listToSort[i] > listToSort[j])
+                    {
+                        temp = listToSort[i];
+                        listToSort[i] = listToSort[j];
+                        listToSort[j] = temp;
+                    }
+                }
+            }
+        }
+
+
+
+        public bool MergedCellsValidation(List<int> cellsToMerge)
+        {
+            int minX = table.TableCellButtonList[cellsToMerge[0]].RowNumber;
+            int minY = table.TableCellButtonList[cellsToMerge[0]].ColumnNumber;
+            int maxX = minX;
+            int maxY = minY;
+
+            int diffX,diffY;
+
+
+            foreach (int i in cellsToMerge)
+            {
+                if (table.TableCellButtonList[i - 1].RowNumber > maxX)
+                    maxX = table.TableCellButtonList[i - 1].RowNumber;
+                else if (table.TableCellButtonList[i - 1].RowNumber < minX)
+                    minX = table.TableCellButtonList[i - 1].RowNumber;
+                if(table.TableCellButtonList[i - 1].ColumnNumber > maxY)
+                    maxY = table.TableCellButtonList[i - 1].ColumnNumber;
+                else if (table.TableCellButtonList[i - 1].ColumnNumber < minY)
+                    minY = table.TableCellButtonList[i - 1].ColumnNumber;
+            }
+            diffX = maxX - minX;
+            diffY = maxY - minY;
+
+            Console.WriteLine("MinX:"+minX);
+            Console.WriteLine("MaxX:" + maxX);
+            Console.WriteLine("MinY:" + minY);
+            Console.WriteLine("MaxY:" + maxY);
+            Console.WriteLine("diffX:" + diffX);
+            Console.WriteLine("diffY:" + diffY);
+
+
+            return false;
         }
     }
 }
+;

@@ -10,7 +10,7 @@ namespace LaTeXTableGenerator.View
     interface ITableCustomizationView
     {
         bool SetVisible { get; set; }
-
+        List<int> SelectedCells { get; set; }
         List<int> CurrentlyChosenButtons { get; set; }
         void PlaceFormInCenter();
         void ControllsAdd(TableCellButton tableCellButton);
