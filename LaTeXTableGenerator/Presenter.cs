@@ -15,14 +15,14 @@ namespace LaTeXTableGenerator
         IMainView mainView;
         ITableCustomizationView tableCustomizationView;
         Table table;
-        LaTexTableText latexTableText;
+        Generator generator;
 
-        public Presenter(IMainView mainView,Table table, LaTexTableText LatexTableText, ITableCustomizationView tableCustomizationView)
+        public Presenter(IMainView mainView,Table table, Generator generator, ITableCustomizationView tableCustomizationView)
         {
             this.mainView = mainView;
             this.table = table;
             this.tableCustomizationView = tableCustomizationView;
-            this.latexTableText = LatexTableText;
+            this.generator = generator;
 
 
             //Delegates
@@ -218,7 +218,16 @@ namespace LaTeXTableGenerator
 
         public void GeneateLatexTableText()
         {
-            latexTableText.TextAlign('l', 4);
+            List<string> cline;
+            generator.TextAlign('l', 4);
+            for (int i = 0; i < table.NumberOfRows; i++)
+            {
+                generator.TableRowStructure.Add(generator.CreateOneRow(table.NumberOfColumns, i, table.TableCellButtonList));
+                generator.TableColumnStructure.Add(generator.CreateOneRowColumnInfo(table.NumberOfColumns, table.NumberOfRows, i, table.TableCellButtonList));
+            }
+            cline = new List<string>(generator.GenerateCline(generator.TableRowStructure, generator.TableColumnStructure, table.NumberOfColumns));            
+            generator.generateTableBodyString(generator.TableRowStructure, generator.TableColumnStructure,cline);
+            
         }
     }
 }
