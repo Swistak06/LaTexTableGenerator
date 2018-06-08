@@ -14,6 +14,7 @@ namespace LaTeXTableGenerator.Model
         public List<TableCellButton> TableCellButtonList { get; set; }
         public int NumberOfColumns { get; set; }
         public int NumberOfRows { get; set; }
+        public char TextAlign { get; set; }
 
         public Table()
         {

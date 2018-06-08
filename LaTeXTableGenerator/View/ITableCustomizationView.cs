@@ -22,6 +22,7 @@ namespace LaTeXTableGenerator.View
         event Action CancelButtonClickEvent;
         event Action MergeButtonClickEvent;
         event Action SplitButtonClickEvent;
+        event Action GenerateButtonClickEvent;
 
     }
 }

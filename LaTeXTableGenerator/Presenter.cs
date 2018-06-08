@@ -15,12 +15,14 @@ namespace LaTeXTableGenerator
         IMainView mainView;
         ITableCustomizationView tableCustomizationView;
         Table table;
+        LaTexTableText latexTableText;
 
-        public Presenter(IMainView mainView,Table table, ITableCustomizationView tableCustomizationView)
+        public Presenter(IMainView mainView,Table table, LaTexTableText LatexTableText, ITableCustomizationView tableCustomizationView)
         {
             this.mainView = mainView;
             this.table = table;
             this.tableCustomizationView = tableCustomizationView;
+            this.latexTableText = LatexTableText;
 
 
             //Delegates
@@ -29,6 +31,7 @@ namespace LaTeXTableGenerator
             tableCustomizationView.CancelButtonClickEvent += TableDestruction;
             tableCustomizationView.MergeButtonClickEvent += MergeCells;
             tableCustomizationView.SplitButtonClickEvent += SplitCells;
+            tableCustomizationView.GenerateButtonClickEvent += GeneateLatexTableText;
 
         }
 
@@ -82,8 +85,7 @@ namespace LaTeXTableGenerator
             foreach(TableCellButton tcb in table.TableCellButtonList)
                 tableCustomizationView.ControllsRemove(tcb);
             tableCustomizationView.SelectedCells.Clear();
-            table.TableCellButtonList.Clear();
-                
+            table.TableCellButtonList.Clear();                
         }
 
         public void ShowMainView()
@@ -106,10 +108,8 @@ namespace LaTeXTableGenerator
                     table.TableCellButtonList[i - 1].InsertMergedCells(tableCustomizationView.SelectedCells);
                     TableCellButton.ChangeState(table.TableCellButtonList[i - 1]);                    
                 }
-
                 tableCustomizationView.SelectedCells.Clear();
-            }
-         
+            }         
         }
 
         //Method resposible for inserting selected buttons indexes into list
@@ -154,18 +154,15 @@ namespace LaTeXTableGenerator
                 {
                     tableCustomizationView.WrongMergeErrorMessage();
                     return false;
-                }
-                   
-
-                
+                } 
+                                
             int minX = table.TableCellButtonList[cellsToMerge[0]-1].RowNumber;
             int minY = table.TableCellButtonList[cellsToMerge[0]-1].ColumnNumber;
             int maxX = minX;
             int maxY = minY;
             int startCell;
             List<int> correctMerge = new List<int>();
-            int diffX,diffY;
-            
+            int diffX,diffY;            
             foreach (int i in cellsToMerge)
             {
                 if (table.TableCellButtonList[i - 1].RowNumber > maxX)
@@ -177,7 +174,6 @@ namespace LaTeXTableGenerator
                 else if (table.TableCellButtonList[i - 1].ColumnNumber < minY)
                     minY = table.TableCellButtonList[i - 1].ColumnNumber;
             }
-
             diffX = maxX - minX;
             diffY = maxY - minY;
             startCell = (minX - 1) * table.NumberOfColumns + minY;
@@ -203,14 +199,26 @@ namespace LaTeXTableGenerator
         {
             if (tableCustomizationView.SelectedCells.Count != 1)
                 tableCustomizationView.MultipleSplitErrorMessage();
+            else if((table.TableCellButtonList[tableCustomizationView.SelectedCells[0] - 1].MergedCellsIndexes.Count == 0))
+                tableCustomizationView.MultipleSplitErrorMessage();
+            else
+            {
+                List<int> cellsToSplit = new List<int>(table.TableCellButtonList[tableCustomizationView.SelectedCells[0] - 1].MergedCellsIndexes);
 
-            List<int> cellsToSplit = new List<int>(table.TableCellButtonList[tableCustomizationView.SelectedCells[0]-1].MergedCellsIndexes);
+                foreach (int i in cellsToSplit)
+                {
+                    table.TableCellButtonList[i - 1].setBodyColor(Control.DefaultBackColor);
+                    table.TableCellButtonList[i - 1].MergedCellsIndexes.Clear();
+                }
+                table.TableCellButtonList[tableCustomizationView.SelectedCells[0] - 1].deselectCell();
+                TableCellButton.ChangeState(table.TableCellButtonList[tableCustomizationView.SelectedCells[0] - 1]);
+                tableCustomizationView.SelectedCells.Clear();
+            }
+        }
 
-
-            foreach (int i in cellsToSplit)
-                Console.WriteLine(i);
-            
-
+        public void GeneateLatexTableText()
+        {
+            latexTableText.TextAlign('l', 4);
         }
     }
 }

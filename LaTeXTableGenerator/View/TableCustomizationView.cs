@@ -65,6 +65,7 @@ namespace LaTeXTableGenerator.View
         public event Action CancelButtonClickEvent;
         public event Action MergeButtonClickEvent;
         public event Action SplitButtonClickEvent;
+        public event Action GenerateButtonClickEvent;
 
         public void ControllsAdd(TableCellButton tableCellButton)
         {
@@ -84,9 +85,7 @@ namespace LaTeXTableGenerator.View
         private void cancelButton_Click(object sender, EventArgs e)
         {
             if(CancelButtonClickEvent != null)
-            {
                 CancelButtonClickEvent();
-            }
         }
 
         public void ControllsRemove(TableCellButton tableCellButton)
@@ -97,9 +96,7 @@ namespace LaTeXTableGenerator.View
         private void mergeButton_Click(object sender, EventArgs e)
         {
             if(MergeButtonClickEvent != null)
-            {
                 MergeButtonClickEvent();
-            }
         }
 
         public void WrongMergeErrorMessage()
@@ -114,17 +111,19 @@ namespace LaTeXTableGenerator.View
 
         public void MultipleSplitErrorMessage()
         {
-            MessageBox.Show("Select single cell of group to split!", "Warning!");
+            MessageBox.Show("Select single cell from group to split!", "Warning!");
         }
 
         private void splitCellsButton_Click(object sender, EventArgs e)
         {
             if (SplitButtonClickEvent != null)
-            {
                 SplitButtonClickEvent();
-            }
         }
 
-
+        private void generateButton_Click(object sender, EventArgs e)
+        {
+            if (GenerateButtonClickEvent != null)
+                GenerateButtonClickEvent();           
+        }
     }
 }

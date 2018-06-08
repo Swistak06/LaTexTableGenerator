@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\LaTexTableText.cs" />
     <Compile Include="Model\Table.cs" />
     <Compile Include="View\IMainView.cs" />
     <Compile Include="View\ITableCustomizationView.cs" />
