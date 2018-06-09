@@ -22,7 +22,8 @@ namespace LaTeXTableGenerator
             TableCustomizationView tableCustomizationView = new TableCustomizationView();
             Table table = new Table();
             Generator LatexTableText = new Generator();
-            Presenter presenter = new Presenter(mainView,table, LatexTableText,tableCustomizationView);
+            LatexTable latexTable = new LatexTable();
+            Presenter presenter = new Presenter(mainView, tableCustomizationView,table, LatexTableText, latexTable);
             Application.Run(mainView);
         }
     }

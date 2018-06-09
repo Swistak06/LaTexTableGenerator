@@ -18,10 +18,12 @@ namespace LaTeXTableGenerator.View
             InitializeComponent();
             currentlyChosenButtons = new List<int>();
             selectedCells = new List<int>();
+            textAlign = 'c';   
         }
 
         private List<int> currentlyChosenButtons;
         private List<int> selectedCells;
+        private char textAlign;
 
         public bool SetVisible
         {
@@ -62,6 +64,19 @@ namespace LaTeXTableGenerator.View
             }
         }
 
+        public char TextAlign
+        {
+            get
+            {
+                return textAlign;
+            }
+
+            set
+            {
+                textAlign = value;
+            }
+        }
+
         public event Action CancelButtonClickEvent;
         public event Action MergeButtonClickEvent;
         public event Action SplitButtonClickEvent;
@@ -82,21 +97,71 @@ namespace LaTeXTableGenerator.View
             Application.Exit();
         }
 
-        private void cancelButton_Click(object sender, EventArgs e)
-        {
-            if(CancelButtonClickEvent != null)
-                CancelButtonClickEvent();
-        }
-
         public void ControllsRemove(TableCellButton tableCellButton)
         {
             Controls.Remove(tableCellButton);
         }
 
-        private void mergeButton_Click(object sender, EventArgs e)
+        private void CancelButton_Click(object sender, EventArgs e)
+        {
+            if (CancelButtonClickEvent != null)
+                CancelButtonClickEvent();
+        }
+
+        private void MergeButton_Click(object sender, EventArgs e)
         {
             if(MergeButtonClickEvent != null)
                 MergeButtonClickEvent();
+        }
+
+        private void SplitCellsButton_Click(object sender, EventArgs e)
+        {
+            if (SplitButtonClickEvent != null)
+                SplitButtonClickEvent();
+        }
+
+        private void GenerateButton_Click(object sender, EventArgs e)
+        {
+            if (GenerateButtonClickEvent != null)
+                GenerateButtonClickEvent();           
+        }
+
+        public void EnableButton(Button button)
+        {
+            button.FlatStyle = FlatStyle.Flat;
+            button.FlatAppearance.BorderColor = Color.Red;
+            button.FlatAppearance.BorderSize = 2;
+            TextAlign = button.Text[0];            
+        }
+
+        public void DisableButton(Button button)
+        {
+            button.FlatStyle = FlatStyle.Standard;
+            button.FlatAppearance.BorderColor = System.Drawing.Color.Empty;
+        }
+
+        private void LeftAlignButton_Click(object sender, EventArgs e)
+        {
+            Button button = (Button)sender;
+            EnableButton(button);
+            DisableButton(centerAlignButton);
+            DisableButton(rightAlignButton);
+        }
+
+        private void CenterAlignButton_Click(object sender, EventArgs e)
+        {
+            Button button = (Button)sender;
+            EnableButton(button);
+            DisableButton(leftAlignButton);
+            DisableButton(rightAlignButton);
+        }
+
+        private void RightAlignButton_Click(object sender, EventArgs e)
+        {
+            Button button = (Button)sender;
+            EnableButton(button);
+            DisableButton(centerAlignButton);
+            DisableButton(leftAlignButton);
         }
 
         public void WrongMergeErrorMessage()
@@ -112,18 +177,6 @@ namespace LaTeXTableGenerator.View
         public void MultipleSplitErrorMessage()
         {
             MessageBox.Show("Select single cell from group to split!", "Warning!");
-        }
-
-        private void splitCellsButton_Click(object sender, EventArgs e)
-        {
-            if (SplitButtonClickEvent != null)
-                SplitButtonClickEvent();
-        }
-
-        private void generateButton_Click(object sender, EventArgs e)
-        {
-            if (GenerateButtonClickEvent != null)
-                GenerateButtonClickEvent();           
         }
     }
 }

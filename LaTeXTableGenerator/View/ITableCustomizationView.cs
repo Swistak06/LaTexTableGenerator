@@ -12,6 +12,7 @@ namespace LaTeXTableGenerator.View
         bool SetVisible { get; set; }
         List<int> SelectedCells { get; set; }
         List<int> CurrentlyChosenButtons { get; set; }
+        char TextAlign { get; set; }
         void PlaceFormInCenter();
         void ControllsAdd(TableCellButton tableCellButton);
         void ControllsRemove(TableCellButton tableCellButton);

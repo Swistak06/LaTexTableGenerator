@@ -3,14 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace LaTeXTableGenerator.Model
 {
     class Generator
     {
-
         public List<List<int>> TableRowStructure { get; set; }
         public List<List<int>> TableColumnStructure { get; set; }
+
+        public static Color GetRandomColor()
+        {
+            Random rnd = new Random();
+            Color randomColor = Color.FromArgb(rnd.Next(256), rnd.Next(256), rnd.Next(256));
+            return randomColor;
+        }
 
         public Generator()
         {
@@ -30,7 +37,7 @@ namespace LaTeXTableGenerator.Model
                     sb.AppendFormat("{0}|", align);
             }
             sb.Append("}");
-            sb.Append("\n \\hline");
+            sb.Append("\n \\hline \n");
             return sb.ToString();
         }
 
@@ -103,9 +110,6 @@ namespace LaTeXTableGenerator.Model
                     i += toSkip;
                 }
             }
-            Console.WriteLine("Rownum:" + rowNumber);
-            foreach (int i in RowStructure)
-                Console.WriteLine(i);
             return RowStructure;
         }
 
@@ -136,9 +140,9 @@ namespace LaTeXTableGenerator.Model
                                 sb.AppendFormat("\\multicolumn{0}{1}{2}{3}{4} &", "{", rowStructure[i][j], "}", "{|c|}", "{}");
                         else
                             if (columnStructure[i][j] == 1)
-                                sb.AppendFormat("\\multicolumn{0}{1}{2}{3}{4} \\\\ \n", "{", rowStructure[i][j], "}", "{|c|}", "{T}", clineText[i]);
+                                sb.AppendFormat("\\multicolumn{0}{1}{2}{3}{4} \\\\ {5}\n", "{", rowStructure[i][j], "}", "{|c|}", "{T}", clineText[i]);
                             else
-                                sb.AppendFormat("\\multicolumn{0}{1}{2}{3}{4} \\\\ \n", "{", rowStructure[i][j], "}", "{|c|}", "{}", clineText[i]);
+                                sb.AppendFormat("\\multicolumn{0}{1}{2}{3}{4} \\\\ {5}\n", "{", rowStructure[i][j], "}", "{|c|}", "{}", clineText[i]);
                     if (rowStructure[i][j] == 1 & columnStructure[i][j] > 1)
                         if (rowStructure[i].Count > 1 & j != rowStructure[i].Count - 1)
                             sb.AppendFormat("\\multirow{0}{1}{2}{3}{4} &", "{", columnStructure[i][j], "}", "{*}", "{T}");
@@ -148,11 +152,10 @@ namespace LaTeXTableGenerator.Model
                         if (rowStructure[i].Count > 1 & j != rowStructure[i].Count - 1)
                             sb.AppendFormat("\\multicolumn{0}{1}{2}{3}{{\\multirow{4}{5}{6}{7}{8}}} &", "{", rowStructure[i][j], "}", "{|c|}", "{", columnStructure[i][j], "}", "{*}", "{T}");
                         else
-                            sb.AppendFormat("\\multicolumn{0}{1}{2}{3}{{\\multirow{4}{5}{6}{7}{8}}} \\\\{5} \n", "{", rowStructure[i][j], "}", "{|c|}", "{", columnStructure[i][j], "}", "{*}", "{T}", clineText[i]);
+                            sb.AppendFormat("\\multicolumn{0}{1}{2}{3}{{\\multirow{4}{5}{6}{7}{8}}} \\\\{9} \n", "{", rowStructure[i][j], "}", "{|c|}", "{", columnStructure[i][j], "}", "{*}", "{T}", clineText[i]);
                 }
             }
-            Console.WriteLine(sb.ToString());
-            return "";
+            return sb.ToString();
         }
         
         public List<string> GenerateCline(List<List<int>> rowStructure, List<List<int>> columnStructure,int cloumnNumber)
@@ -162,7 +165,9 @@ namespace LaTeXTableGenerator.Model
             List<List<int>> cLines = new List<List<int>>();
             List<int> cLinesRow = new List<int>();
             List<string> clinesText = new List<string>();
+                     
 
+            //Creating matrix of 1 in table size
             for (int i = 0; i < rowStructure.Count; i++)
             {
                 for (int j = 0; j < rowStructure[i].Count; j++)
@@ -173,38 +178,47 @@ namespace LaTeXTableGenerator.Model
                 horizontalLinesRow = new List<int>();
             }
 
-            int place;
-            int place2;
+            int currentCell;
 
+            //inserting information which cells has bottom line
             for (int i = 0; i < rowStructure.Count; i++)
             {
-                place = 0;
+                currentCell = 0;
                 for (int j = 0; j < rowStructure[i].Count; j++)
                 {
-                    if (columnStructure[i][j] == 1)
-                        for (int k = 0; k < rowStructure[i][j]; k++)
-                            place++;
-                    else if (columnStructure[i][j] == 0)
-                        place++;
-                    else if (columnStructure[i][j] > 1)
+                    //if cell is of height 1
+                    if(columnStructure[i][j] == 1)
                     {
-                        for (int c = 0; c < columnStructure[i][j] - 1; c++)
+                        for (int k = 0; k < rowStructure[i][j]; k++)
                         {
-                            place2 = place;
-                            for (int k = 0; k < rowStructure[i][j]; k++)
-                            {
-                                horizontalLines[i + c][place2] = 0;
-                                place2++;
-                            }
+                            horizontalLines[i][currentCell] = 1;
+                            currentCell++;
+                        }                            
+                    }
+                    //if cell is higher than  1
+                    else if(columnStructure[i][j]> 1)
+                    {
+                        for (int row = 0; row < columnStructure[i][j]-1; row++)
+                        {
+                            for (int column = currentCell; column < currentCell + rowStructure[i][j]; column++)
+                                horizontalLines[i + row][column] = 0;
                         }
-                        place += rowStructure[i][j];
+                        currentCell += rowStructure[i][j];
+                    }
+                    else if(columnStructure[i][j] == 0)
+                    {
+                        for (int k = 0; k < rowStructure[i][j]; k++)
+                        {
+                            currentCell++;
+                        }
                     }
                 }
             }
 
             int counter;
 
-            for(int i = 0;i<horizontalLines.Count;i++)
+            //checking sizes of parts with or without bottom line
+            for (int i = 0;i<horizontalLines.Count;i++)
             {
                 counter = 0;
                 for(int j = 0; j<horizontalLines[0].Count; j++)
@@ -229,12 +243,11 @@ namespace LaTeXTableGenerator.Model
                 cLinesRow = new List<int>();
             }
 
-
             StringBuilder sb = new StringBuilder();
             int start;
             int stop;
 
-            for(int i =0;i<cLines.Count;i++)
+            for (int i =0;i<cLines.Count;i++)
             {
                 start = 1;
                 stop = 1;
@@ -244,20 +257,19 @@ namespace LaTeXTableGenerator.Model
                     {
                         stop += cLines[i][j]-1;
                         sb.AppendFormat(" \\cline{0}{1}-{2}{3}", "{", start, stop, "}");
-                        
+                        start += cLines[i][j];
                     }
                     else if(cLines[i][j] < 0)
                     {
                         start += Math.Abs(cLines[i][j]);
                         stop = start;
-                    }                                        
+                    }   
                 }
                 clinesText.Add(sb.ToString());
                 sb.Clear();
             }
 
             return clinesText;
-        }
-        
+        }        
     }
 }

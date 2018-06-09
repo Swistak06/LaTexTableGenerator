@@ -32,9 +32,9 @@
             this.generateButton = new System.Windows.Forms.Button();
             this.mergeButton = new System.Windows.Forms.Button();
             this.splitCellsButton = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
+            this.leftAlignButton = new System.Windows.Forms.Button();
+            this.rightAlignButton = new System.Windows.Forms.Button();
+            this.centerAlignButton = new System.Windows.Forms.Button();
             this.TextAlignLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -47,7 +47,7 @@
             this.cancelButton.TabIndex = 0;
             this.cancelButton.Text = "Cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
-            this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
+            this.cancelButton.Click += new System.EventHandler(this.CancelButton_Click);
             // 
             // generateButton
             // 
@@ -58,7 +58,7 @@
             this.generateButton.TabIndex = 1;
             this.generateButton.Text = "Generate";
             this.generateButton.UseVisualStyleBackColor = true;
-            this.generateButton.Click += new System.EventHandler(this.generateButton_Click);
+            this.generateButton.Click += new System.EventHandler(this.GenerateButton_Click);
             // 
             // mergeButton
             // 
@@ -70,7 +70,7 @@
             this.mergeButton.TabIndex = 2;
             this.mergeButton.Text = "Merge Cells";
             this.mergeButton.UseVisualStyleBackColor = true;
-            this.mergeButton.Click += new System.EventHandler(this.mergeButton_Click);
+            this.mergeButton.Click += new System.EventHandler(this.MergeButton_Click);
             // 
             // splitCellsButton
             // 
@@ -82,37 +82,40 @@
             this.splitCellsButton.TabIndex = 3;
             this.splitCellsButton.Text = "Split Cells";
             this.splitCellsButton.UseVisualStyleBackColor = true;
-            this.splitCellsButton.Click += new System.EventHandler(this.splitCellsButton_Click);
+            this.splitCellsButton.Click += new System.EventHandler(this.SplitCellsButton_Click);
             // 
-            // button1
+            // leftAlignButton
             // 
-            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.button1.Location = new System.Drawing.Point(424, 30);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(35, 35);
-            this.button1.TabIndex = 4;
-            this.button1.Text = "L";
-            this.button1.UseVisualStyleBackColor = true;
+            this.leftAlignButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.leftAlignButton.Location = new System.Drawing.Point(424, 30);
+            this.leftAlignButton.Name = "leftAlignButton";
+            this.leftAlignButton.Size = new System.Drawing.Size(35, 35);
+            this.leftAlignButton.TabIndex = 4;
+            this.leftAlignButton.Text = "l";
+            this.leftAlignButton.UseVisualStyleBackColor = true;
+            this.leftAlignButton.Click += new System.EventHandler(this.LeftAlignButton_Click);
             // 
-            // button2
+            // rightAlignButton
             // 
-            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.button2.Location = new System.Drawing.Point(506, 30);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(35, 35);
-            this.button2.TabIndex = 5;
-            this.button2.Text = "R";
-            this.button2.UseVisualStyleBackColor = true;
+            this.rightAlignButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.rightAlignButton.Location = new System.Drawing.Point(506, 30);
+            this.rightAlignButton.Name = "rightAlignButton";
+            this.rightAlignButton.Size = new System.Drawing.Size(35, 35);
+            this.rightAlignButton.TabIndex = 5;
+            this.rightAlignButton.Text = "r";
+            this.rightAlignButton.UseVisualStyleBackColor = true;
+            this.rightAlignButton.Click += new System.EventHandler(this.RightAlignButton_Click);
             // 
-            // button3
+            // centerAlignButton
             // 
-            this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.button3.Location = new System.Drawing.Point(465, 30);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(35, 35);
-            this.button3.TabIndex = 6;
-            this.button3.Text = "C";
-            this.button3.UseVisualStyleBackColor = true;
+            this.centerAlignButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.centerAlignButton.Location = new System.Drawing.Point(465, 30);
+            this.centerAlignButton.Name = "centerAlignButton";
+            this.centerAlignButton.Size = new System.Drawing.Size(35, 35);
+            this.centerAlignButton.TabIndex = 6;
+            this.centerAlignButton.Text = "c";
+            this.centerAlignButton.UseVisualStyleBackColor = true;
+            this.centerAlignButton.Click += new System.EventHandler(this.CenterAlignButton_Click);
             // 
             // TextAlignLabel
             // 
@@ -130,9 +133,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(984, 661);
             this.Controls.Add(this.TextAlignLabel);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.centerAlignButton);
+            this.Controls.Add(this.rightAlignButton);
+            this.Controls.Add(this.leftAlignButton);
             this.Controls.Add(this.splitCellsButton);
             this.Controls.Add(this.mergeButton);
             this.Controls.Add(this.generateButton);
@@ -151,9 +154,9 @@
         private System.Windows.Forms.Button generateButton;
         private System.Windows.Forms.Button mergeButton;
         private System.Windows.Forms.Button splitCellsButton;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button leftAlignButton;
+        private System.Windows.Forms.Button rightAlignButton;
+        private System.Windows.Forms.Button centerAlignButton;
         private System.Windows.Forms.Label TextAlignLabel;
     }
 }

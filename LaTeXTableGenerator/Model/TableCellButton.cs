@@ -23,12 +23,6 @@ namespace LaTeXTableGenerator.Model
             }
         }
 
-        public static Color GetRandomColor(Random rnd)
-        {           
-            Color randomColor = Color.FromArgb(rnd.Next(256), rnd.Next(256), rnd.Next(256));
-            return randomColor;
-        }
-
         public int Index { get; set; }
         public int RowNumber { get; set; }
         public int ColumnNumber { get; set; }

@@ -15,8 +15,15 @@ namespace LaTeXTableGenerator.Model
 
         public LatexTable()
         {
-            TableBegin = "\begin{table}\n";
-            EndOfTable = " \\hline \n \\end{tabular}\n \\end{table}";
+            TableBegin = "\\begin{table}\n";
+            EndOfTable = "\\end{tabular}\n \\end{table}";
+        }
+
+        public void SaveTableToFile()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendFormat("{0}{1}{2}{3}", TableBegin, TabularBegin, TableBody, EndOfTable);
+            System.IO.File.WriteAllText(@"LaTeXTable.txt",sb.ToString());
         }
     }
 }

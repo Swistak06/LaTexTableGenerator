@@ -16,13 +16,15 @@ namespace LaTeXTableGenerator
         ITableCustomizationView tableCustomizationView;
         Table table;
         Generator generator;
+        LatexTable latexTable;
 
-        public Presenter(IMainView mainView,Table table, Generator generator, ITableCustomizationView tableCustomizationView)
+        public Presenter(IMainView mainView,ITableCustomizationView tableCustomizationView, Table table, Generator generator,LatexTable latexTable)
         {
             this.mainView = mainView;
-            this.table = table;
             this.tableCustomizationView = tableCustomizationView;
+            this.table = table;
             this.generator = generator;
+            this.latexTable = latexTable;
 
 
             //Delegates
@@ -32,7 +34,8 @@ namespace LaTeXTableGenerator
             tableCustomizationView.MergeButtonClickEvent += MergeCells;
             tableCustomizationView.SplitButtonClickEvent += SplitCells;
             tableCustomizationView.GenerateButtonClickEvent += GeneateLatexTableText;
-
+            tableCustomizationView.GenerateButtonClickEvent += ShowMainView;
+            tableCustomizationView.GenerateButtonClickEvent += TableDestruction;
         }
 
 
@@ -85,7 +88,11 @@ namespace LaTeXTableGenerator
             foreach(TableCellButton tcb in table.TableCellButtonList)
                 tableCustomizationView.ControllsRemove(tcb);
             tableCustomizationView.SelectedCells.Clear();
-            table.TableCellButtonList.Clear();                
+            table.TableCellButtonList.Clear();
+            latexTable.TabularBegin = "";
+            latexTable.TableBody ="";
+            generator.TableColumnStructure.Clear();
+            generator.TableRowStructure.Clear();               
         }
 
         public void ShowMainView()
@@ -96,11 +103,10 @@ namespace LaTeXTableGenerator
 
         public void MergeCells()
         {
-            sortList(tableCustomizationView.SelectedCells);
             if(MergedCellsValidation(tableCustomizationView.SelectedCells))
             {
-                Random rnd = new Random();
-                Color groupColor = TableCellButton.GetRandomColor(rnd);
+                
+                Color groupColor = Generator.GetRandomColor();
                 foreach (int i in tableCustomizationView.SelectedCells)
                 {   
                     table.TableCellButtonList[i - 1].setBodyColor(groupColor);
@@ -140,15 +146,19 @@ namespace LaTeXTableGenerator
             }
         }
 
+        //Checking if cells to merge are correctly selected
         public bool MergedCellsValidation(List<int> cellsToMerge)
         {
-            //Single cell selected 
+            if (cellsToMerge.Count == 0)
+                return false;
+            sortList(tableCustomizationView.SelectedCells); 
             if (cellsToMerge.Count == 1)
             {
                 tableCustomizationView.SingleMergeErrorMessage();
                 return false;
             }
 
+            //If cell already belong to group
             foreach(int i in cellsToMerge)
                 if(table.TableCellButtonList[i - 1].MergedCellsIndexes.Count != 0)
                 {
@@ -161,6 +171,8 @@ namespace LaTeXTableGenerator
             int maxX = minX;
             int maxY = minY;
             int startCell;
+
+            //Generating proper group of cells
             List<int> correctMerge = new List<int>();
             int diffX,diffY;            
             foreach (int i in cellsToMerge)
@@ -219,15 +231,17 @@ namespace LaTeXTableGenerator
         public void GeneateLatexTableText()
         {
             List<string> cline;
-            generator.TextAlign('l', 4);
             for (int i = 0; i < table.NumberOfRows; i++)
             {
                 generator.TableRowStructure.Add(generator.CreateOneRow(table.NumberOfColumns, i, table.TableCellButtonList));
                 generator.TableColumnStructure.Add(generator.CreateOneRowColumnInfo(table.NumberOfColumns, table.NumberOfRows, i, table.TableCellButtonList));
             }
-            cline = new List<string>(generator.GenerateCline(generator.TableRowStructure, generator.TableColumnStructure, table.NumberOfColumns));            
-            generator.generateTableBodyString(generator.TableRowStructure, generator.TableColumnStructure,cline);
-            
+            cline = new List<string>(generator.GenerateCline(generator.TableRowStructure, generator.TableColumnStructure, table.NumberOfColumns));
+
+            latexTable.TabularBegin = generator.TextAlign(tableCustomizationView.TextAlign, table.NumberOfColumns);
+            latexTable.TableBody = generator.generateTableBodyString(generator.TableRowStructure, generator.TableColumnStructure, cline); ;
+
+            latexTable.SaveTableToFile();
         }
     }
 }
