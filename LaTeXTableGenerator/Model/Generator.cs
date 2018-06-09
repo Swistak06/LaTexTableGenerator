@@ -84,7 +84,7 @@ namespace LaTeXTableGenerator.Model
                 {                    
                     rowRange = (tableList[i].RowNumber * numberOfColumns) - tableList[i].Index;
                     counter = numberOfColumns - rowRange;
-                    while(counter < numberOfColumns*numberOfRows)
+                    while(counter <= numberOfColumns*numberOfRows)
                     {
                         if (tableList[i].Index > counter & tableList[i].MergedCellsIndexes.Contains(counter))
                         {
