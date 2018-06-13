@@ -131,6 +131,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(984, 661);
             this.Controls.Add(this.TextAlignLabel);
             this.Controls.Add(this.centerAlignButton);
@@ -140,8 +141,9 @@
             this.Controls.Add(this.mergeButton);
             this.Controls.Add(this.generateButton);
             this.Controls.Add(this.cancelButton);
+            this.MaximizeBox = false;
             this.Name = "TableCustomizationView";
-            this.Text = "TableCustomizationView";
+            this.Text = "LaTeX Table Generator";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.TableCustomizationView_FormClosed);
             this.ResumeLayout(false);
             this.PerformLayout();

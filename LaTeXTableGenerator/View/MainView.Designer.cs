@@ -148,6 +148,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(484, 361);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
@@ -157,8 +158,9 @@
             this.Controls.Add(this.RowNumberInput);
             this.Controls.Add(this.ColumnNumberInput);
             this.Controls.Add(this.CreateTableButton);
+            this.MaximizeBox = false;
             this.Name = "MainView";
-            this.Text = "Form1";
+            this.Text = "LaTeX Table Generator";
             ((System.ComponentModel.ISupportInitialize)(this.ColumnNumberInput)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.RowNumberInput)).EndInit();
             this.ResumeLayout(false);
