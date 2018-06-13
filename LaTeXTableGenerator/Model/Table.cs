@@ -8,9 +8,7 @@ namespace LaTeXTableGenerator.Model
 {
     public class Table
     {
-        public static int horizontalStartPosiotion = 70;
-        public static int verticalStartPosiotion = 100;
-
+        
         public List<TableCellButton> TableCellButtonList { get; set; }
         public int NumberOfColumns { get; set; }
         public int NumberOfRows { get; set; }

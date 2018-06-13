@@ -78,7 +78,7 @@ namespace LaTeXTableGenerator
         {
             mainView.SetVisible = false;
             tableCustomizationView.SetVisible = true; 
-            CreateTableCellButtons(Table.verticalStartPosiotion, Table.horizontalStartPosiotion, mainView.NumberOfRows, 
+            CreateTableCellButtons(100, 70, mainView.NumberOfRows, 
                 mainView.NumberOfColumns);
         }
 
